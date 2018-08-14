@@ -1,5 +1,5 @@
 { "name": "p-fatal",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Re-throw unhandled promise rejections in the next turn, so other listeners get a chance to also run.",
   "keywords": [
     "promise",
@@ -22,11 +22,14 @@
   "private": false, "license": "ISC",
 
   "main": "fatal.js",
-  "scripts": { "test": "nodejs test/all.node.js" },
+  "scripts": { "test": "bash test/why/why.sh" },
   "directories": { "test": "test" },
 
   "dependencies": {},
   "devDependencies": {
+    "bluebird": "^3.5.1",
+    "esm": "^3.0.17",
+    "perish": "^1.0.2"
   },
 
 
