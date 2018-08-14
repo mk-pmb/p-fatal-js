@@ -1,0 +1,34 @@
+{ "name": "p-fatal",
+  "version": "0.1.0",
+  "description": "Re-throw unhandled promise rejections in the next turn, so other listeners get a chance to also run.",
+  "keywords": [
+    "promise",
+    "promises",
+    "rejection",
+    "unhandled rejection"
+  ],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/p-fatal-js/#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/p-fatal-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/p-fatal-js/issues"
+  },
+  "contributors": [],
+
+  "private": false, "license": "ISC",
+
+  "main": "fatal.js",
+  "scripts": { "test": "nodejs test/all.node.js" },
+  "directories": { "test": "test" },
+
+  "dependencies": {},
+  "devDependencies": {
+  },
+
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
