@@ -4,8 +4,8 @@
 
 function test_all () {
   export LANG{,UAGE}=en_US.UTF-8  # make error messages search engine-friendly
-  local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
-  cd "$SELFPATH" || return $?
+  local SELFPATH="$(readlink -m -- "$BASH_SOURCE"/..)"
+  cd -- "$SELFPATH" || return $?
 
   ./why/why.sh || return $?
   NON_ERR='undef' expect_fail non-error.js \
