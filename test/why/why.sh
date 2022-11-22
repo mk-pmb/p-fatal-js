@@ -33,15 +33,15 @@ function test_why () {
   local LOG_EXP="$RQR_NAME.$RQR_WHEN.log"
   local LOG_ACT="tmp.$RQR_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
 
-  nodejs -r esm why.js |& sed -re '
+  nodejs -r esm why.js |& sed -rf <(echo '
     /^\s*at /s~(:[0-9]+){2}\)$~:…:…)~
-    ' | sed -re '
+    ') | sed -rf <(echo '
     : read_all
     $!{N;b read_all}
     s~(\n\s*at (\S+ \(|))/\S+/~\1…/~g
     s~((\n\s*at [^\n]+){3}\n\s*at |$\
       )[^\n]+(\n\s*at [^\n]+)*~\1…~g
-    ' >"$LOG_ACT"
+    ') >"$LOG_ACT"
   if diff -sU 9002 -- "$LOG_EXP" "$LOG_ACT"; then
     rm -- "$LOG_ACT"
     return 0
