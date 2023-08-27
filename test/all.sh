@@ -13,7 +13,7 @@ function test_all () {
   NON_ERR='false' expect_fail non-error.js \
     'Error: unhandledRejection is not an object: "false"'  || return $?
   NON_ERR='0bj' expect_fail non-error.js \
-    'toString() threw exception' || return $?
+    '<ref *1> [Object: null prototype] {' || return $?
 
   echo "+OK all tests passed."
 }
