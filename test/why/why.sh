@@ -8,6 +8,8 @@ function why () {
   cd -- "$SELFPATH" || return $?
   rm -- tmp.*.{early,late}.*-*.{raw,log} 2>/dev/null
 
+  local ENV_TYPE='dev'
+
   local TESTNAME='"why" test'
   local MODULES=(
     perish
@@ -33,7 +35,7 @@ function test_why () {
   export REQUIRE_EARLY=
   export REQUIRE_"${RQR_WHEN^^}"="$RQR_NAME"
 
-  local LOG_EXP="$RQR_NAME.$RQR_WHEN.log"
+  local LOG_EXP="expect.$ENV_TYPE/$RQR_NAME.$RQR_WHEN.log"
   local LOG_ACT="tmp.$RQR_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
   local LOG_RAW="${LOG_ACT%.*}.raw"
 
