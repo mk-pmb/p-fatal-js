@@ -5,21 +5,23 @@
 function why () {
   export LANG{,UAGE}=en_US.UTF-8  # make error messages search engine-friendly
   local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
-  cd "$SELFPATH" || return $?
+  cd -- "$SELFPATH" || return $?
 
+  local TESTNAME='"why" test'
   local MODULES=(
     perish
     p-fatal
     )
-  local STAGE= MOD=
+  local STAGE= MOD= ERR_CNT=0
   for MOD in "${MODULES[@]}"; do
     for STAGE in early late; do
-      test_why "$STAGE" "$MOD" || return $?
+      test_why "$STAGE" "$MOD"
     done
   done
 
-  echo '+OK "why" test passed'
-  return 0
+  [ "$ERR_CNT" == 0 ] || return 4$(
+    echo "-ERR $TESTNAME failed $ERR_CNT tests." >&2)
+  echo "+OK $TESTNAME passed"
 }
 
 
@@ -47,8 +49,8 @@ function test_why () {
     return 0
   fi
   echo
-  echo '-ERR "why" test failed for' "$LOGBFN" >&2
-  return 4
+  echo "-ERR $TESTNAME failed for $LOG_EXP" >&2
+  (( ERR_CNT += 1 ))
 }
 
 
