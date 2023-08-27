@@ -1,18 +1,17 @@
-﻿/*jslint indent: 2, maxlen: 80, continue: false, unparam: false, node: true */
-/* -*- tab-width: 2 -*- */
 'use strict';
 
-require('p-fatal');
-var Promise = require('bluebird'), stockNonErrors,
-  nonError = process.env.NON_ERR,
-  hasOwn = Function.call.bind(Object.prototype.hasOwnProperty);
+require('../fatal.js');
 
-stockNonErrors = {
+const hasOwn = Function.call.bind(Object.prototype.hasOwnProperty);
+
+const stockNonErrors = {
   'undef': undefined,
   '0bj': Object.create(null),
 };
+
+let nonError = process.env.NON_ERR;
 nonError = (hasOwn(stockNonErrors, nonError)
   ? stockNonErrors[nonError]
   : JSON.parse(nonError));
 
-Promise.try(function () { throw nonError; });
+(async function dare() { throw nonError; }());
