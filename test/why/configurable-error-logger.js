@@ -1,12 +1,10 @@
-/*jslint indent: 2, maxlen: 80, continue: false, unparam: false, node: true */
-/* -*- tab-width: 2 -*- */
 'use strict';
 
-var EX = { cnt: 0 };
+const EX = { cnt: 0 };
 
 EX.install = function install(opts) {
   if (!opts) { return; }
-  var dest = opts.errorLogTarget;
+  const dest = opts.errorLogTarget;
   if (!dest) { return; }
   function logError(err) {
     console.warn('pretend to log error to ' + dest + ':', String(err));

@@ -1,11 +1,12 @@
-﻿/*jslint indent: 2, maxlen: 80, continue: false, unparam: false, node: true */
-/* -*- tab-width: 2 -*- */
+﻿// eslint-disable-next-line spaced-comment
+/*jslint indent: 2, maxlen: 80, continue: false, unparam: false, node: true */
 'use strict';
+/* eslint-disable no-var, one-var, one-var-declaration-per-line */
 
-function pfatal(e, p) {
-  e = pfatal.ensureTruthy(e);
+function pfatal(origErr, origPr) {
+  var e = pfatal.ensureTruthy(origErr);
   try {
-    e.promise = p;
+    e.promise = origPr;
   } catch (ignore) {
     // We tried. Propagating this error would mask the original one,
     // which is probably more important.
@@ -15,21 +16,21 @@ function pfatal(e, p) {
 }
 
 
-pfatal.ensureTruthy = function (e) {
+pfatal.ensureTruthy = function ensureTruthy(orig) {
+  var e = orig;
   if (e) { return e; }
-  var o = e;
   try {
     e = '"' + String(e) + '"';
   } catch (c) {
     e = 'something that cannot even be stringified.';
   }
   e = new Error('unhandledRejection is not an object: ' + e);
-  e.origFalseyError = o;
+  e.origFalseyError = orig;
   return e;
 };
 
 
-pfatal.addCauseStack = function (e) {
+pfatal.addCauseStack = function addCauseStack(e) {
   var c = e, s;
   while (c) {
     c = (c.jse_cause || c.cause || false);
