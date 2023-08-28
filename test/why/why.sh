@@ -35,13 +35,14 @@ function why () {
 
 function test_why () {
   local RQR_WHEN="$1"; shift
-  local RQR_NAME="$1"; shift
+  local PKG_NAME="$1"; shift
+  local RQR_NAME="$PKG_NAME"
   export REQUIRE_LATE=
   export REQUIRE_EARLY=
   export REQUIRE_"${RQR_WHEN^^}"="$RQR_NAME"
 
-  local LOG_EXP="expect.$ENV_TYPE/$RQR_NAME.$RQR_WHEN.log"
-  local LOG_ACT="tmp.$RQR_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
+  local LOG_EXP="expect.$ENV_TYPE/$PKG_NAME.$RQR_WHEN.log"
+  local LOG_ACT="tmp.$PKG_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
   local LOG_RAW="${LOG_ACT%.*}.raw"
 
   "$NODEJS" -r esm why.js &>"$LOG_RAW" || true
@@ -50,6 +51,24 @@ function test_why () {
     rm -- "$LOG_ACT" "$LOG_RAW"
     return 0
   fi
+
+  if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+    ( echo
+
+      echo "### [why] $PKG_NAME.$RQR_WHEN.raw (albeit cut)"
+      echo '```text'
+      cut --bytes=1-500 -- "$LOG_RAW" | nl -ba
+      echo '```'
+      echo
+
+      echo "### [why] $PKG_NAME.$RQR_WHEN.normalized.actual.log"
+      echo '```text'
+      cut --bytes=1-500 -- "$LOG_ACT" | nl -ba
+      echo '```'
+      echo
+    ) >>"$GITHUB_STEP_SUMMARY"
+  fi
+
   echo
   echo "-ERR $TESTNAME failed for $LOG_EXP" >&2
   (( ERR_CNT += 1 ))
