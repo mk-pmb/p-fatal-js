@@ -37,6 +37,9 @@ function test_why () {
   local RQR_WHEN="$1"; shift
   local PKG_NAME="$1"; shift
   local RQR_NAME="$PKG_NAME"
+  case "$PKG_NAME" in
+    p-fatal ) RQR_NAME='../../fatal.js';;
+  esac
   export REQUIRE_LATE=
   export REQUIRE_EARLY=
   export REQUIRE_"${RQR_WHEN^^}"="$RQR_NAME"
