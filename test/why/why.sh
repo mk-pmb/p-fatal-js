@@ -8,7 +8,12 @@ function why () {
   cd -- "$SELFPATH" || return $?
   rm -- tmp.*.{early,late}.*-*.{raw,log} 2>/dev/null
 
+  local NODEJS="$(which node{js,} 2>/dev/null | grep -m 1 -Pe '^/')"
+
   local ENV_TYPE='dev'
+  if [ -n "$CI" ]; then
+    [ -z "$GITHUB_WORKSPACE" ] || ENV_TYPE='github-ci'
+  fi
 
   local TESTNAME='"why" test'
   local MODULES=(
@@ -39,8 +44,8 @@ function test_why () {
   local LOG_ACT="tmp.$RQR_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
   local LOG_RAW="${LOG_ACT%.*}.raw"
 
-  nodejs -r esm why.js &>"$LOG_RAW"
-  <"$LOG_RAW" nodejs normalize_errors.js >"$LOG_ACT"
+  "$NODEJS" -r esm why.js &>"$LOG_RAW" || true
+  <"$LOG_RAW" "$NODEJS" normalize_errors.js >"$LOG_ACT"
   if diff -sU 9002 -- "$LOG_EXP" "$LOG_ACT"; then
     rm -- "$LOG_ACT" "$LOG_RAW"
     return 0
