@@ -1,9 +1,16 @@
 'use strict';
 
-let tx = require('read-all-stdin-sync')();
+const absDirLib = require('absdir');
+const readStdinNow = require('read-all-stdin-sync');
+
+const repoPathResolve = absDirLib(module, '../../');
+const repoPathAbs = repoPathResolve('.');
+
+let tx = readStdinNow();
 
 (function fix() {
   tx = tx.replace(/\s+$/, '');
+  tx = tx.split(repoPathAbs).join('/…/path_to_repo/…');
 }());
 
 (function fix() {
