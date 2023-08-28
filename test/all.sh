@@ -6,6 +6,7 @@ function test_all () {
   export LANG{,UAGE}=en_US.UTF-8  # make error messages search engine-friendly
   local SELFPATH="$(readlink -m -- "$BASH_SOURCE"/..)"
   cd -- "$SELFPATH" || return $?
+  local NODEJS="$(which node{js,} 2>/dev/null | grep -m 1 -Pe '^/')"
 
   ./why/why.sh || return $?
   NON_ERR='undef' expect_fail non-error.js \
@@ -23,7 +24,7 @@ function expect_fail () {
   local SCRIPT="$1"; shift
   echo -n "$FUNCNAME: $SCRIPT … "
   local RV= OUTPUT=
-  OUTPUT="$(nodejs -- "$SCRIPT" 2>&1)"; RV=$?
+  OUTPUT="$("$NODEJS" -- "$SCRIPT" 2>&1)"; RV=$?
   [ "$RV" == 0 ] && return 3$(echo "E: $FUNCNAME: $SCRIPT rv=0" >&2)
   local EXPECT=
   for EXPECT in "$@"; do
