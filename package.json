@@ -1,5 +1,5 @@
 { "name": "p-fatal",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Re-throw unhandled promise rejections in the next turn, so other listeners get a chance to also run.",
   "keywords": [
     "promise",
