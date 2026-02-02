@@ -3,6 +3,10 @@
 'use strict';
 /* eslint-disable no-var, one-var, one-var-declaration-per-line */
 
+
+var nodeVerNums = process.versions.node.split('.').map(Number);
+
+
 function pfatal(origErr, origPr) {
   var e = pfatal.ensureTruthy(origErr);
   try {
@@ -42,6 +46,8 @@ pfatal.addCauseStack = function addCauseStack(e) {
 };
 
 
-process.on('unhandledRejection', pfatal);
+if (nodeVerNums[0] < 24) {
+  process.on('unhandledRejection', pfatal);
+}
 
 module.exports = pfatal;
