@@ -10,3 +10,4 @@ configurable-error-logger logged 1 errors.
     at Generator.next (<anonymous>) {
   promise: Promise { <rejected> [Circular *1] }
 }
+rv=1

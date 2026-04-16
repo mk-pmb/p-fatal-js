@@ -12,6 +12,9 @@ function why () {
   local NODEVER_MAJOR="$("$NODEJS" --version | grep -oPe '^v\d+(?=\.\d)')"
   NODEVER_MAJOR="${NODEVER_MAJOR#v}"
 
+  local RUN_ESM=( "$NODEJS" )
+  [ "$NODEVER_MAJOR" -ge 22 ] || RUN_ESM+=( -r esm )
+
   local ENV_TYPE='dev'
   if [ -n "$CI" ]; then
     [ -z "$GITHUB_WORKSPACE" ] || ENV_TYPE='github-ci'
@@ -58,7 +61,8 @@ function test_why () {
   local LOG_ACT="tmp.$PKG_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
   local LOG_RAW="${LOG_ACT%.*}.raw"
 
-  "$NODEJS" -r esm why.js &>"$LOG_RAW" || true
+  "${RUN_ESM[@]}" why.js &>"$LOG_RAW"
+  echo "rv=$?" >>"$LOG_RAW"
   <"$LOG_RAW" "$NODEJS" normalize_errors.js >"$LOG_ACT"
   if diff -sU 9002 -- "$LOG_EXP" "$LOG_ACT"; then
     rm -- "$LOG_ACT" "$LOG_RAW"
