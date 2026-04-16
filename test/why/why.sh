@@ -9,11 +9,21 @@ function why () {
   rm -- tmp.*.{early,late}.*-*.{raw,log} 2>/dev/null
 
   local NODEJS="$(which node{js,} 2>/dev/null | grep -m 1 -Pe '^/')"
+  local NODEVER_MAJOR="$("$NODEJS" --version | grep -oPe '^v\d+(?=\.\d)')"
+  NODEVER_MAJOR="${NODEVER_MAJOR#v}"
 
   local ENV_TYPE='dev'
   if [ -n "$CI" ]; then
     [ -z "$GITHUB_WORKSPACE" ] || ENV_TYPE='github-ci'
   fi
+
+  local VAL="expect.$ENV_TYPE"
+  local EXPECTATIONS_DIR="$VAL/ancient"
+  for VAL in "$VAL"/n[0-9]*/; do
+    VAL="${VAL%/}"
+    [ "${VAL##*n}" -le "$NODEVER_MAJOR" ] || break
+    EXPECTATIONS_DIR="$VAL"
+  done
 
   local TESTNAME='"why" test'
   local MODULES=(
@@ -44,7 +54,7 @@ function test_why () {
   export REQUIRE_EARLY=
   export REQUIRE_"${RQR_WHEN^^}"="$RQR_NAME"
 
-  local LOG_EXP="expect.$ENV_TYPE/$PKG_NAME.$RQR_WHEN.log"
+  local LOG_EXP="$EXPECTATIONS_DIR/$PKG_NAME.$RQR_WHEN.log"
   local LOG_ACT="tmp.$PKG_NAME.$RQR_WHEN.$(date +%y%m%d-%H%M%S)-$$.log"
   local LOG_RAW="${LOG_ACT%.*}.raw"
 
