@@ -1,0 +1,7 @@
+Error: Fail whale failed. :-(
+    at failWhale (…/why.js:…:…)
+    at Object.<anonymous> (…/why.js:…:…)
+    at Module._compile (node:internal/modules/cjs/loader:…:…)
+    at …
+configurable-error-logger logged 0 errors.
+rv=1
